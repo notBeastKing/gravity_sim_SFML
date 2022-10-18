@@ -19,24 +19,22 @@ class logic{
 public:
     CircleShape body;
     float distance;
-    float forc;
-    float acceleration;
-     float velocity;
-    Vector2f accelerating;
-    Vector2f Velocityv;
-    Vector2f  forcv;
-    Vector2f directionm;
+    float force;
+    Vector2f acceleration;
+    Vector2f Velocity;
+    Vector2f  forcev;
+    Vector2f direction;
 
     logic()
     {
         body.setFillColor(Color(255, 95, 95)); // red
-        Velocityv = Vector2f (0,0);
+        Velocity = Vector2f (0,0);
     }
 
     logic(string color)
     {
         body.setFillColor(Color( 95, 255, 250)); // blue
-        Velocityv = Vector2f (0,0);
+        Velocity = Vector2f (0,0);
     }
 
 
@@ -48,26 +46,25 @@ public:
         body.setPosition(position);
     }
 
-    Vector2f force(float mass1, float mass2)
-    {
-//        cout<<MAX(distance,90)<<"\n";
-        forc = (G * mass1 * mass2)/(pow(MAX(distance,90),2));
-          forcv  = forc * directionm;
+    Vector2f forcef(float mass1, float mass2)
+    {  
+        force = (G * mass1 * mass2)/(pow(MAX(distance,90),2));
+          forcev  = force * direction;
 
-        cout<<"force : " << forc<<"\n";
-         accelerating = forcv/mass1;
-         Velocityv = Velocityv + accelerating;
-        return Velocityv;
+        cout<<"force : " << force<<"\n";
+
+         acceleration = forcev/mass1;
+
+         Velocity = Velocity + acceleration;
+        return Velocity;
     }
 
-    Vector2f direction(Vector2f p1, Vector2f p2)
+    void directionf(Vector2f p1, Vector2f p2)
     {
 
-        directionm = (p2 - p1);
-        distance = MAGN(directionm);
-        directionm = NORM(directionm);
-
-        return directionm;
+        direction = (p2 - p1);
+        distance = MAGN(direction);
+        direction = NORM(direction);
     }
 
 };
@@ -78,7 +75,6 @@ int main(int argc, char *argv[])
     RenderWindow window(VideoMode(1600,900), "gravity pls work", Style::Default);
 
 
-    float velocity;
     string cyan = "cyan";
     logic b1;
     logic b2(cyan);
@@ -104,11 +100,11 @@ int main(int argc, char *argv[])
             }
         }
 
-        Vector2f directb1 = b1.direction(b1.body.getPosition(), b2.body.getPosition()); //direction of b1
-        Vector2f directb2 = b2.direction(b2.body.getPosition(), b1.body.getPosition()); // direction of b2
+        b1.directionf(b1.body.getPosition(), b2.body.getPosition()); //direction of b1
+        b2.directionf(b2.body.getPosition(), b1.body.getPosition()); // direction of b2
 
-       Vector2f magnib1 = b1.force(massb1, massb2); // velocity for b1
-       Vector2f magnib2 = b2.force(massb2, massb1); // velocity for b2
+       Vector2f magnib1 = b1.forcef(massb1, massb2); // velocity for b1
+       Vector2f magnib2 = b2.forcef(massb2, massb1); // velocity for b2
 
            b2.body.setPosition(b2.body.getPosition()  + magnib2 );
            b1.body.setPosition(b1.body.getPosition()  + magnib1 );
